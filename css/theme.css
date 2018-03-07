@@ -1,0 +1,13 @@
+.nav-tabs {
+	width:100%;
+}
+
+.nav-tabs li{
+	text-align: center;
+	width:33%;
+	
+}
+
+.nav-tabs li a{
+	padding-top: 50%;
+}
