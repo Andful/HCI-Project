@@ -1,0 +1,37 @@
+{{define "tabs"}}
+
+<ul class="nav nav-tabs">
+  <li class="active">
+    <a data-toggle="tab" href="#home">
+      <img src="svg/stats.svg">
+    </a>
+  </li>
+  <li>
+    <a data-toggle="tab" href="#menu1">
+      <img src="svg/calendar.svg">
+  </a>
+  </li>
+  <li>
+    <a data-toggle="tab" href="#menu2">
+      <img src="svg/gear.svg">
+    </a>
+  </li>
+</ul>
+
+<div class="tab-content">
+  <div id="home" class="tab-pane fade in active">
+    <h3>SLEEP STATISTICS</h3>
+      <img src="img/line_graph.png" style="width:100%;">
+    {{template "sleeping"}}
+  </div>
+  <div id="menu1" class="tab-pane fade">
+    <h3>SCHEDULE</h3>
+    {{template "schedule"}}
+  </div>
+  <div id="menu2" class="tab-pane fade">
+    <h3>SETTINGS</h3>
+    {{template "setting"}}
+  </div>
+</div>
+
+{{end}}
