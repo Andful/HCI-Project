@@ -108,8 +108,6 @@ var fcViews = fc.views = {};
 
 $.fn.fullCalendar = function(options) {
 
-
-	// method calling
 	if (typeof options == 'string') {
 		var args = Array.prototype.slice.call(arguments, 1);
 		var res;
@@ -155,6 +153,13 @@ $.fn.fullCalendar = function(options) {
 		element.data('fullCalendar', calendar); // TODO: look into memory leak implications
 		calendar.render();
 	});
+
+	var myvar = this
+
+	this.updateSize = function() {
+		//console.dir(myvar.data('fullCalendar'))
+		myvar.data('fullCalendar').updateSize()
+	}
 	
 	
 	return this;
@@ -306,12 +311,12 @@ function Calendar(element, options, eventSources) {
 	
 	
 	function elementVisible() {
-		return element.is(':visible');
+		return true;//element.is(':visible');
 	}
 	
 	
 	function bodyVisible() {
-		return $('body').is(':visible');
+		return true;//return $('body').is(':visible');
 	}
 	
 	
@@ -367,7 +372,6 @@ function Calendar(element, options, eventSources) {
 
 
 	function _renderView(inc) { // assumes elementVisible
-		console.log('hello')
 		ignoreWindowResize++;
 
 		if (currentView.start) { // already been rendered?
@@ -408,6 +412,8 @@ function Calendar(element, options, eventSources) {
 			renderEvents();
 		//}
 	}
+
+	this.updateSize = updateSize
 	
 	
 	function calcSize() { // assumes elementVisible
@@ -487,7 +493,9 @@ function Calendar(element, options, eventSources) {
 
 	function renderEvents(modifiedEventID) { // TODO: remove modifiedEventID hack
 		if (elementVisible()) {
+			//console.dir(currentView)
 			currentView.setEventData(events); // for View.js, TODO: unify with renderEvents
+			//console.dir(currentView)
 			currentView.renderEvents(events, modifiedEventID); // actually render the DOM elements
 			currentView.trigger('eventAfterAllRender');
 		}
@@ -681,6 +689,11 @@ function Calendar(element, options, eventSources) {
 				thisObj || _element,
 				Array.prototype.slice.call(arguments, 2)
 			);
+		}
+
+		if(name=='eventClick') {
+			console.log('clickeds')
+			window.switcherSchedule.switch('#event-data')
 		}
 	}
 	
@@ -889,7 +902,6 @@ var eventGUID = 1;
 function EventManager(options, _sources) {
 	var t = this;
 	
-	
 	// exports
 	t.isFetchNeeded = isFetchNeeded;
 	t.fetchEvents = fetchEvents;
@@ -950,7 +962,7 @@ function EventManager(options, _sources) {
 		_fetchEventSource(source, function(events) {
 			if (fetchID == currentFetchID) {
 				if (events) {
-
+					//console.dir(events)
 					if (options.eventDataTransform) {
 						events = $.map(events, options.eventDataTransform);
 					}
@@ -967,6 +979,7 @@ function EventManager(options, _sources) {
 					cache = cache.concat(events);
 				}
 				pendingSourceCnt--;
+				//console.log('here')
 				if (!pendingSourceCnt) {
 					reportEvents(cache);
 				}
@@ -991,6 +1004,7 @@ function EventManager(options, _sources) {
 				return;
 			}
 		}
+
 		var events = source.events;
 		if (events) {
 			if ($.isFunction(events)) {
@@ -5122,7 +5136,6 @@ function DayEventRenderer() {
 	// Mouse event will be lazily applied, except if the event has an ID of `modifiedEventId`.
 	// Can only be called when the event container is empty (because it wipes out all innerHTML).
 	function renderDayEvents(events, modifiedEventId) {
-
 		// do the actual rendering. Receive the intermediate "segment" data structures.
 		var segments = _renderDayEvents(
 			events,
@@ -5648,6 +5661,7 @@ function DayEventRenderer() {
 			opacity: opt('dragOpacity'),
 			revertDuration: opt('dragRevertDuration'),
 			start: function(ev, ui) {
+				console.log('drag started')
 				trigger('eventDragStart', eventElement, event, ev, ui);
 				hideEvents(event, eventElement);
 				hoverListener.start(function(cell, origCell, rowDelta, colDelta) {
@@ -5667,9 +5681,11 @@ function DayEventRenderer() {
 				}, ev, 'drag');
 			},
 			stop: function(ev, ui) {
+				console.log('drag end')
 				hoverListener.stop();
 				clearOverlays();
 				trigger('eventDragStop', eventElement, event, ev, ui);
+				console.log(dayDelta)
 				if (dayDelta) {
 					eventDrop(this, event, dayDelta, 0, event.allDay, ev, ui);
 				}else{
@@ -6104,6 +6120,9 @@ function HorizontalPositionCache(getElement) {
 
 })(jQuery);
 
+var sleeping;
+var schedule;
+
 $(document).ready(function() {
 	    var date = new Date();
 		var d = date.getDate();
@@ -6144,7 +6163,7 @@ $(document).ready(function() {
 		/* initialize the calendar
 		-----------------------------------------------------------------*/
 		
-		var sleeping =  $('#sleeping').fullCalendar({
+		sleeping =  $('#sleeping').fullCalendar({
 			header: {
 				left: 'title',
 				center: 'agendaDay,agendaWeek,month',
@@ -6172,7 +6191,7 @@ $(document).ready(function() {
 			select: function(start, end, allDay) {
 				var title = prompt('Event Title:');
 				if (title) {
-					calendar.fullCalendar('renderEvent',
+					sleeping.fullCalendar('renderEvent',
 						{
 							title: title,
 							start: start,
@@ -6182,7 +6201,7 @@ $(document).ready(function() {
 						true // make the event "stick"
 					);
 				}
-				calendar.fullCalendar('unselect');
+				sleeping.fullCalendar('unselect');
 			},
 			droppable: true, // this allows things to be dropped onto the calendar !!!
 			drop: function(date, allDay) { // this function is called when something is dropped
@@ -6213,6 +6232,7 @@ $(document).ready(function() {
 				{
 					title: 'All Day Event',
 					start: new Date(y, m, 1)
+
 				},
 				{
 					id: 999,
@@ -6257,7 +6277,7 @@ $(document).ready(function() {
 			],			
 		});
 
-		var schedule =  $('#schedule').fullCalendar({
+		schedule =  $('#schedule').fullCalendar({
 			header: {
 				left: 'title',
 				center: 'agendaDay,agendaWeek,month',
@@ -6285,7 +6305,7 @@ $(document).ready(function() {
 			select: function(start, end, allDay) {
 				var title = prompt('Event Title:');
 				if (title) {
-					calendar.fullCalendar('renderEvent',
+					schedule.fullCalendar('renderEvent',
 						{
 							title: title,
 							start: start,
@@ -6295,7 +6315,7 @@ $(document).ready(function() {
 						true // make the event "stick"
 					);
 				}
-				calendar.fullCalendar('unselect');
+				schedule.fullCalendar('unselect');
 			},
 			droppable: true, // this allows things to be dropped onto the calendar !!!
 			drop: function(date, allDay) { // this function is called when something is dropped
@@ -6325,7 +6345,7 @@ $(document).ready(function() {
 			events: [
 				{
 					title: 'All Day Event',
-					start: new Date(y, m, 1)
+					start: new Date(y, m, 1),
 				},
 				{
 					id: 999,

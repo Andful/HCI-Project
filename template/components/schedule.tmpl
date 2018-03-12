@@ -1,10 +1,17 @@
 {{define "schedule"}}
 
-<div id='wrap'>
 
-<div id='schedule'></div>
+<div id="switch-content-schedule">
+	<div id="schedule-calender" class="tab-pane fade in active">
+		<div id='wrap'>
 
-<div style='clear:both'></div>
+			<div id='schedule'></div>
+
+			<div style='clear:both'></div>
+		</div>
+	</div>
+	<div id="event-data" class="tab-pane fade in active">
+		{{template "eventPage"}}
+	</div>
 </div>
-
 {{end}}

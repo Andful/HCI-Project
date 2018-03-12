@@ -5,7 +5,7 @@
 {{template "style"}}
 </head>
 <body>
-	<button id="start" type="button">Click Me!</button>
+	<button id="start" type="button" onclick="setTimeout(function() { sleeping.updateSize();schedule.updateSize(); }, 200);">Click Me!</button>
 	<div id="app">
 		{{template "tabs"}}
 		{{template "script"}}
