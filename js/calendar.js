@@ -6236,39 +6236,39 @@ $(document).ready(function() {
 				},
 				{
 					id: 999,
-					title: 'Repeating Event',
+					title: 'Good Sleep',
 					start: new Date(y, m, d-3, 16, 0),
 					allDay: false,
 					className: 'info'
 				},
 				{
 					id: 999,
-					title: 'Repeating Event',
+					title: 'Siesta',
 					start: new Date(y, m, d+4, 16, 0),
 					allDay: false,
 					className: 'info'
 				},
 				{
-					title: 'Meeting',
+					title: 'Average Sleeping',
 					start: new Date(y, m, d, 10, 30),
 					allDay: false,
 					className: 'important'
 				},
 				{
-					title: 'Lunch',
+					title: 'Bad Sleeping',
 					start: new Date(y, m, d, 12, 0),
 					end: new Date(y, m, d, 14, 0),
 					allDay: false,
 					className: 'important'
 				},
 				{
-					title: 'Birthday Party',
+					title: 'Good Sleeping',
 					start: new Date(y, m, d+1, 19, 0),
 					end: new Date(y, m, d+1, 22, 30),
 					allDay: false,
 				},
 				{
-					title: 'Click for Google',
+					title: 'Average Sleeping',
 					start: new Date(y, m, 28),
 					end: new Date(y, m, 29),
 					url: 'http://google.com/',
@@ -6387,6 +6387,7 @@ $(document).ready(function() {
 					url: 'http://google.com/',
 					className: 'success'
 				}
+				
 			],			
 		});
 		
